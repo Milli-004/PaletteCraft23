@@ -51,16 +51,18 @@ npm install
 
 ### 3. Set Up Environment Variables
 
-The application requires a Google Gemini API key to function.
+The application requires a Google Gemini API key to function and now uses environment variables only (no in-app key entry).
 
-Create a new file named `.env.local` in the root of your project and add your API key to it:
+Create a new file named `.env.local` in the root of your project and add your API key to it. Any of the following variables will work; `GEMINI_API_KEY` is recommended:
 
 ```
-# For Vite or Create React App, prefix with VITE_ or REACT_APP_
-# Example for Vite:
+# Preferred
+GEMINI_API_KEY=YOUR_GEMINI_API_KEY_HERE
+
+# Also supported
+API_KEY=YOUR_GEMINI_API_KEY_HERE
 VITE_GEMINI_API_KEY=YOUR_GEMINI_API_KEY_HERE
 ```
-*Note: You will then need to update `services/geminiService.ts` to use `import.meta.env.VITE_GEMINI_API_KEY` or `process.env.REACT_APP_GEMINI_API_KEY` instead of `process.env.API_KEY`.*
 
 ### 4. Run the Development Server
 
@@ -76,12 +78,12 @@ The application should now be running on `http://localhost:5173` (or a similar p
 
 This application is ready to deploy on vercel or netlify
 
-**Crucial Step:** You must add your Gemini API key as an environment variable in your deployment platform's project settings.
+**Crucial Step:** You must add your Gemini API key as an environment variable in your deployment platform's project settings. Set one of: `GEMINI_API_KEY` (preferred), `API_KEY`, or `VITE_GEMINI_API_KEY`.
 
-1.  Navigate to your project's settings on the deployment platform.
-2.  Find the "Environment Variables" section.
-3.  Add a new variable with the **Name** `API_KEY` and your key as the **Value**.
-4.  Redeploy your application for the changes to take effect.
+1. Navigate to your project's settings on the deployment platform (e.g., Vercel).
+2. Find the Environment Variables section.
+3. Add `GEMINI_API_KEY` with your key as the value (or `API_KEY`).
+4. Redeploy your application for the changes to take effect.
 
 ## 📄 License
 
