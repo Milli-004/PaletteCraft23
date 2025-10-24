@@ -2,10 +2,6 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { Palette } from '../types';
 
 function getEnvApiKey(): string | undefined {
-    // Support multiple env var sources across dev/prod setups
-    // Vite: import.meta.env.VITE_GEMINI_API_KEY
-    // Define replacements: process.env.GEMINI_API_KEY or process.env.API_KEY (via vite.config.ts)
-    // Guard against the literal string "undefined" being injected by define()
     const candidates = [
         // @ts-ignore - import.meta.env is provided by Vite at runtime
         typeof import.meta !== 'undefined' && (import.meta as any).env?.VITE_GEMINI_API_KEY,
@@ -56,6 +52,37 @@ const paletteSchema = {
     required: ["palette"]
 };
 
+// Helper function to extract JSON text from response
+function extractJsonFromResponse(response: any): string {
+    // Try to get text directly
+    if (typeof response.text === 'string' && response.text.trim()) {
+        return response.text.trim();
+    }
+    
+    // Try to get from candidates
+    if (response.candidates && Array.isArray(response.candidates)) {
+        for (const candidate of response.candidates) {
+            if (candidate.content && candidate.content.parts) {
+                for (const part of candidate.content.parts) {
+                    if (typeof part.text === 'string' && part.text.trim()) {
+                        return part.text.trim();
+                    }
+                }
+            }
+        }
+    }
+    
+    // Try response.response?.text() if it's a function
+    if (typeof response.response?.text === 'function') {
+        const text = response.response.text();
+        if (typeof text === 'string' && text.trim()) {
+            return text.trim();
+        }
+    }
+    
+    throw new Error("Could not extract text from API response");
+}
+
 export async function generatePalette(theme: string): Promise<Palette> {
     try {
         const ai = getAiClient();
@@ -70,29 +97,19 @@ export async function generatePalette(theme: string): Promise<Palette> {
             },
         });
 
-        // Prefer text if available; otherwise, scan parts for a JSON string
-        const text = response.text;
-        const jsonText = typeof text === 'string' && text.trim()
-            ? text.trim()
-            : (() => {
-                const parts = (response as any)?.candidates?.[0]?.content?.parts ?? [];
-                const firstText = parts.find((p: any) => typeof p?.text === 'string')?.text;
-                return typeof firstText === 'string' ? firstText.trim() : '';
-            })();
-
-        if (!jsonText) {
-            throw new Error("Empty response from model.");
-        }
-
+        const jsonText = extractJsonFromResponse(response);
         const data = JSON.parse(jsonText);
 
         if (data.palette && Array.isArray(data.palette) && data.palette.length > 0) {
-            return data.palette.slice(0, 5); // Ensure exactly 5 colors
+            return data.palette.slice(0, 5);
         } else {
             throw new Error("Invalid response format from API.");
         }
     } catch (error) {
         console.error("Error generating palette:", error);
+        if (error instanceof Error) {
+            throw new Error(`Failed to generate palette: ${error.message}`);
+        }
         throw new Error("Failed to generate palette. Please check your API key and try again.");
     }
 }
@@ -111,15 +128,7 @@ export async function namePaletteFromHex(hexCodes: string[]): Promise<Palette> {
             },
         });
 
-        const text = response.text;
-        const jsonText = typeof text === 'string' && text.trim()
-            ? text.trim()
-            : (() => {
-                const parts = (response as any)?.candidates?.[0]?.content?.parts ?? [];
-                const firstText = parts.find((p: any) => typeof p?.text === 'string')?.text;
-                return typeof firstText === 'string' ? firstText.trim() : '';
-            })();
-
+        const jsonText = extractJsonFromResponse(response);
         const data = JSON.parse(jsonText);
 
         if (data.palette && Array.isArray(data.palette) && data.palette.length > 0) {
@@ -129,7 +138,6 @@ export async function namePaletteFromHex(hexCodes: string[]): Promise<Palette> {
         }
     } catch (error) {
         console.error("Error naming palette:", error);
-        // Fallback to generic names if API fails
         return hexCodes.map((hex, i) => ({ hex, name: `Color ${i + 1}` }));
     }
 }
@@ -154,28 +162,19 @@ export async function generatePaletteFromImage(base64Data: string, mimeType: str
             },
         });
 
-        const text = response.text;
-        const jsonText = typeof text === 'string' && text.trim()
-            ? text.trim()
-            : (() => {
-                const parts = (response as any)?.candidates?.[0]?.content?.parts ?? [];
-                const firstText = parts.find((p: any) => typeof p?.text === 'string')?.text;
-                return typeof firstText === 'string' ? firstText.trim() : '';
-            })();
-
-        if (!jsonText) {
-            throw new Error("Empty response from model.");
-        }
-
+        const jsonText = extractJsonFromResponse(response);
         const data = JSON.parse(jsonText);
 
         if (data.palette && Array.isArray(data.palette) && data.palette.length > 0) {
-            return data.palette.slice(0, 5); // Ensure exactly 5 colors
+            return data.palette.slice(0, 5);
         } else {
             throw new Error("Invalid response format from API.");
         }
     } catch (error) {
         console.error("Error generating palette from image:", error);
+        if (error instanceof Error) {
+            throw new Error(`Failed to generate palette from image: ${error.message}`);
+        }
         throw new Error("Failed to generate palette from image. Please check your API key and try again.");
     }
 }
