@@ -5,14 +5,12 @@ function getEnvApiKey(): string | undefined {
     // Support multiple env var sources across dev/prod setups
     // Vite: import.meta.env.VITE_GEMINI_API_KEY
     // Define replacements: process.env.GEMINI_API_KEY or process.env.API_KEY (via vite.config.ts)
-    // Fallback to localStorage key set by UI
     // Guard against the literal string "undefined" being injected by define()
     const candidates = [
         // @ts-ignore - import.meta.env is provided by Vite at runtime
         typeof import.meta !== 'undefined' && (import.meta as any).env?.VITE_GEMINI_API_KEY,
         (process as any)?.env?.GEMINI_API_KEY,
         (process as any)?.env?.API_KEY,
-        typeof window !== 'undefined' ? window.localStorage.getItem('GEMINI_API_KEY') : undefined,
     ];
 
     for (const value of candidates) {
@@ -27,7 +25,7 @@ function getAiClient() {
     const apiKey = getEnvApiKey();
     if (!apiKey) {
         throw new Error(
-            "Missing Gemini API key. Set VITE_GEMINI_API_KEY, GEMINI_API_KEY, or add one via the API key manager."
+            "Missing Gemini API key. Set VITE_GEMINI_API_KEY, GEMINI_API_KEY, or API_KEY as an environment variable."
         );
     }
     return new GoogleGenAI({ apiKey });
