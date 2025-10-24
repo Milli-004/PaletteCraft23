@@ -27,7 +27,7 @@ function getAiClient() {
     const apiKey = getEnvApiKey();
     if (!apiKey) {
         throw new Error(
-            "Missing Gemini API key. Set VITE_GEMINI_API_KEY, GEMINI_API_KEY, or add one via the API key manager."
+            "Missing Gemini API key. Set API_KEY, VITE_GEMINI_API_KEY, GEMINI_API_KEY, or add one via the API key manager."
         );
     }
     return new GoogleGenAI({ apiKey });
