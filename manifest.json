@@ -1,0 +1,21 @@
+{
+  "short_name": "PaletteCraft",
+  "name": "PaletteCraft: AI Palette Generator",
+  "icons": [
+    {
+      "src": "./icon-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "./icon-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#d9534f",
+  "background_color": "#fdf6e3",
+  "description": "An AI-powered color palette generator."
+}

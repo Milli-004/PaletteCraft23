@@ -1,0 +1,5 @@
+{
+  "name": "Copy of PaletteCraft",
+  "description": "A responsive React web app that generates color palettes based on user input using the Gemini API. Features include saving palettes to local storage and a dark mode toggle.",
+  "requestFramePermissions": []
+}

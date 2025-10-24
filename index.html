@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PaletteCraft</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎨</text></svg>">
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#fdf6e3" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#1c1c1e" media="(prefers-color-scheme: dark)">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+        darkMode: 'class',
+        theme: {
+            extend: {
+                fontFamily: {
+                    sans: ['Inter', 'sans-serif'],
+                },
+                colors: {
+                    'light-bg': '#fdf6e3', 
+                    'light-text': '#3d3732',
+                    'brand-primary': '#d9534f',
+                    'brand-secondary': '#8f9779',
+                    'dark-bg': '#1c1c1e',
+                    'dark-text': '#f2f2f7',
+                },
+                animation: {
+                    'fade-in-up': 'fade-in-up 0.6s ease-out forwards',
+                    'scale-in': 'scale-in 0.2s ease-out forwards',
+                },
+                keyframes: {
+                    'fade-in-up': {
+                        'from': { opacity: '0', transform: 'translateY(20px)' },
+                        'to': { opacity: '1', transform: 'translateY(0)' },
+                    },
+                    'scale-in': {
+                       'from': { opacity: '0', transform: 'scale(0.8)' },
+                       'to': { opacity: '1', transform: 'scale(1)' },
+                    }
+                }
+            }
+        }
+    }
+    </script>
+    
+    <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/client": "https://aistudiocdn.com/react-dom@^19.2.0/client",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.27.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/"
+  }
+}
+</script>
+
+</head>
+<body class="bg-light-bg dark:bg-dark-bg">
+    <div id="root"></div>
+    <script type="module" src="index.tsx"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./service-worker.js').then(registration => {
+                    console.log('SW registered: ', registration);
+                }).catch(registrationError => {
+                    console.log('SW registration failed: ', registrationError);
+                });
+            });
+        }
+    </script>
+</body>
+</html>
