@@ -3,7 +3,6 @@ import { Palette } from './types';
 import { generatePalette } from './services/geminiService';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { ThemeToggle } from './components/ThemeToggle';
-import { ApiKeyManager } from './components/ApiKeyManager';
 import { SparklesIcon } from './components/icons/SparklesIcon';
 import { PromptSuggestions } from './components/PromptSuggestions';
 import { ImageUploader } from './components/ImageUploader';
@@ -81,7 +80,6 @@ function App() {
         <div className="container mx-auto px-4 py-3 flex justify-between items-center gap-4">
           <h1 className="text-2xl font-bold tracking-tight text-brand-primary dark:text-brand-secondary">PaletteCraft AI</h1>
           <div className="flex items-center gap-3">
-            <ApiKeyManager />
             <ThemeToggle />
           </div>
         </div>
