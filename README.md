@@ -82,7 +82,3 @@ This application is ready to deploy on vercel or netlify
 2.  Find the "Environment Variables" section.
 3.  Add a new variable with the **Name** `API_KEY` and your key as the **Value**.
 4.  Redeploy your application for the changes to take effect.
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
